@@ -46,6 +46,10 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+a {
+	text-decoration: none;
+	color: inherit;
+}
 /** end reset css**/
 body {
 	max-width: 1140px;
@@ -211,3 +215,35 @@ footer nav ul {
 	margin: 2em
 }
 
+/* login page */
+#login {
+	display: flex;
+	flex-direction: column;
+}
+#login h2 {
+	text-align: center;
+	margin-bottom: 1em;
+}
+#login form {
+	display: flex;
+	flex-direction: column;
+	width: 50%;
+	margin: auto;
+}
+#login input {
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+#login label {
+	color: #3D3D3D;
+	font-weight: 500;
+	margin-bottom: 0.5em;
+}
+#forgot-password {
+	text-align: center;
+	margin-top: 1em;
+	color: #3D3D3D;
+	text-decoration: underline;
+}
