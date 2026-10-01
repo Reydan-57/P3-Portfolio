@@ -208,6 +208,9 @@ input[type="submit"]{
 	text-align: center;
 	border-radius: 60px ;
 }
+input[type="submit"]:hover {
+	background-color: #0E2F28;
+}
 
 footer nav ul {
 	display: flex;
@@ -216,6 +219,7 @@ footer nav ul {
 }
 
 /* login page */
+
 #login {
 	display: flex;
 	flex-direction: column;
@@ -246,4 +250,9 @@ footer nav ul {
 	margin-top: 1em;
 	color: #3D3D3D;
 	text-decoration: underline;
+}
+.error-message {
+    color: red;
+    text-align: center;
+    margin-top: 20px;
 }
