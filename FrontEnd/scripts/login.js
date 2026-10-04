@@ -23,9 +23,13 @@ form.addEventListener("submit", async (event) => {
         localStorage.setItem("token", data.token);
         window.location.href = "index.html";
     } else {
-        const errorMessage = document.createElement("p");
-        errorMessage.textContent = "E-mail ou mot de passe incorrect.";
-        errorMessage.classList.add("error-message");
-        form.appendChild(errorMessage);
+        messageError();
     }
 });
+
+function messageError() {
+    const errorMessage = document.createElement("p");
+    errorMessage.textContent = "E-mail ou mot de passe incorrect.";
+    errorMessage.classList.add("error-message");
+    form.appendChild(errorMessage);
+}

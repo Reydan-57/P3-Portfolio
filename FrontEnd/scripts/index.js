@@ -5,6 +5,38 @@ document.addEventListener('DOMContentLoaded',  () => {
 
 let projects;
 
+const token = localStorage.getItem("token");
+    if (token) {
+    console.log("Utilisateur connecté");
+
+    const editMode = document.createElement("div");
+    editMode.classList.add("edit-mode");
+    editMode.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> Mode édition';
+
+    document.body.prepend(editMode);
+
+    const loginLink = document.querySelector("#login-link");
+    loginLink.textContent = "logout";
+    loginLink.removeAttribute("href");
+    loginLink.addEventListener("click", () => {
+        localStorage.removeItem("token");
+        window.location.href = "index.html";
+    });
+
+    const filters = document.querySelector(".categories");
+    filters.style.display = "none";
+
+    const editButton = document.createElement("button");
+    editButton.classList.add("edit-button");
+    editButton.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> Modifier';
+
+    const titleProjects = document.querySelector(".title-projects");
+    titleProjects.appendChild(editButton);
+
+    } else {
+        console.log("Utilisateur non connecté");
+}
+
 async function getWorks() {
 
     const reponse = await fetch('http://localhost:5678/api/works');
