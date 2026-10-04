@@ -129,13 +129,24 @@ li:hover {
 	text-align: center;
 	margin-bottom: 1em;
 }
-
+.title-projects {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+.edit-button {
+    border: none;
+    background: none;
+    font-family: 'Work Sans';
+    font-size: 14px;
+    cursor: pointer;
+	margin-bottom: 2em;
+}
 .categories {
 	display: flex;
 	justify-content: center;
 	margin-bottom: 3em;
 }
-
 .categories button {
 	background-color: white;
 	border: none;
@@ -255,4 +266,14 @@ footer nav ul {
     color: red;
     text-align: center;
     margin-top: 20px;
+}
+
+/*Mode édition*/
+
+.edit-mode {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+	font-size: 16px;
 }
