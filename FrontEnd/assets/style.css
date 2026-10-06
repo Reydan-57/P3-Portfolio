@@ -277,3 +277,64 @@ footer nav ul {
     padding: 20px;
 	font-size: 16px;
 }
+
+/*Modal*/
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    width: 500px;
+    min-height: 300px;
+    padding: 30px;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.modal-gallery {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.modal-gallery img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+}
+
+.modal-project {
+    position: relative;
+}
+
+.modal-project button {
+    position: absolute;
+    top: 6px;
+    right: 5px;
+	background-color: #000000;
+	border: none;
+	border-radius: 2px;
+	padding: 3px 4px;
+}
+
+i.fa-solid.fa-trash-can {
+	color: #ffffff;
+}

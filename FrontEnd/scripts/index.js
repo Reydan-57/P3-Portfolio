@@ -33,6 +33,10 @@ const token = localStorage.getItem("token");
     const titleProjects = document.querySelector(".title-projects");
     titleProjects.appendChild(editButton);
 
+    editButton.addEventListener("click", () => {
+    openModal();
+    });
+
     } else {
         console.log("Utilisateur non connecté");
 }
@@ -70,7 +74,6 @@ async function getFilters() {
     const buttonsFilters = document.querySelectorAll(".categories button");
     buttonsFilters.forEach((button) => {
         button.addEventListener('click', () => {
-           /* console.log(button.dataset.categoryId); */
        
                 const sectionProjects = document.querySelector(".gallery");
 
@@ -105,7 +108,47 @@ function displayProjects(projectsToDisplay) {
         projectElement.appendChild(imageElement);
         projectElement.appendChild(titleElement);
         sectionProjects.appendChild(projectElement);
-        /* console.log(project.categoryId); */
-
     }
+}
+
+function openModal() {
+    const modal = document.createElement("div");
+    modal.classList.add("modal");
+
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Galerie photo</h2>
+            <div class="modal-gallery"></div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const modalGallery = modal.querySelector(".modal-gallery");
+
+    projects.forEach(project => {
+        const projectContainer = document.createElement("div");
+        projectContainer.classList.add("modal-project");
+        const image = document.createElement("img");
+        image.src = project.imageUrl;
+        image.alt = project.title;
+        const deleteButton = document.createElement("button");
+        const deleteIcon = document.createElement("i");
+        deleteIcon.classList.add("fa-solid", "fa-trash-can");
+        deleteButton.appendChild(deleteIcon);
+        projectContainer.appendChild(image);
+        projectContainer.appendChild(deleteButton);
+        modalGallery.appendChild(projectContainer);
+    });
+    const closeModal = modal.querySelector(".modal-close");
+
+    closeModal.addEventListener("click", () => {
+        modal.remove();
+    });
+    modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+        modal.remove();
+    }
+    });
 }
