@@ -118,8 +118,15 @@ function openModal() {
     modal.innerHTML = `
         <div class="modal-content">
             <span class="modal-close">&times;</span>
-            <h2>Galerie photo</h2>
-            <div class="modal-gallery"></div>
+            <div class="gallery-view">
+                <h2>Galerie photo</h2>
+                <div class="modal-gallery"></div>
+                <button class="add-photo">Ajouter une photo</button>
+            </div>
+            <div class="form-view">
+                <button class="back-button">←</button>
+                <h2>Ajout photo</h2>
+            </div>
         </div>
     `;
 
@@ -150,5 +157,17 @@ function openModal() {
     if (event.target === modal) {
         modal.remove();
     }
+    });
+    const galleryView = modal.querySelector(".gallery-view");
+    const formView = modal.querySelector(".form-view");
+    const backButton = modal.querySelector(".back-button");
+    const addPhotoButton = modal.querySelector(".add-photo");
+    addPhotoButton.addEventListener("click", () => {
+        galleryView.style.display = "none";
+        formView.style.display = "block";
+    });
+    backButton.addEventListener("click", () => {
+        galleryView.style.display = "block";
+        formView.style.display = "none";
     });
 }
