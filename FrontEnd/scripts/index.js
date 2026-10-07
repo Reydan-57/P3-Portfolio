@@ -141,6 +141,27 @@ function openModal() {
         image.src = project.imageUrl;
         image.alt = project.title;
         const deleteButton = document.createElement("button");
+            deleteButton.addEventListener("click", async () => {
+                const response = await fetch(
+                    `http://localhost:5678/api/works/${project.id}`,
+                    {
+                        method: 'DELETE',
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+                if (response.ok) {
+                    projectContainer.remove();
+                    projects = projects.filter((item) => {
+                        return project.id !== item.id;
+                    });
+                    const sectionProjects = document.querySelector(".gallery");
+                    sectionProjects.innerHTML = "";
+                    displayProjects(projects);
+                }
+            });
+
         const deleteIcon = document.createElement("i");
         deleteIcon.classList.add("fa-solid", "fa-trash-can");
         deleteButton.appendChild(deleteIcon);
