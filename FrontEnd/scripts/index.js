@@ -49,11 +49,15 @@ async function getWorks() {
     displayProjects(projects);
 }
 
-async function getFilters() {
-    
+async function getCategories() {
     const categoriesResponse = await fetch('http://localhost:5678/api/categories');
-
     const categories = await categoriesResponse.json();
+
+    return categories;
+}
+
+async function getFilters() {
+    const categories = await getCategories();
 
     const allButton = document.createElement("button");
     allButton.innerText = "Tous";
@@ -111,7 +115,8 @@ function displayProjects(projectsToDisplay) {
     }
 }
 
-function openModal() {
+async function openModal() {
+    const categories = await getCategories();
     const modal = document.createElement("div");
     modal.classList.add("modal");
 
@@ -126,6 +131,19 @@ function openModal() {
             <div class="form-view">
                 <button class="back-button">←</button>
                 <h2>Ajout photo</h2>
+                <form class="add-project-form">
+                    <div class="image-upload">
+                        <input type="file" id="image" accept="image/*">
+                        <img class="image-preview">
+                    </div>
+                    <label for="title">Titre</label>
+                    <input type="text" id="title">
+                    <label for="category">Catégorie</label>
+                    <select id="category">
+                    </select>
+                    <p class="form-error"></p>
+                    <button type="submit">Valider</button>
+                </form>
             </div>
         </div>
     `;
@@ -183,6 +201,23 @@ function openModal() {
     const formView = modal.querySelector(".form-view");
     const backButton = modal.querySelector(".back-button");
     const addPhotoButton = modal.querySelector(".add-photo");
+    const imageInput = modal.querySelector("#image");
+    const imagePreview = modal.querySelector(".image-preview");
+    const categorySelect = modal.querySelector("#category");
+    const addProjectForm = modal.querySelector(".add-project-form");
+    const titleInput = modal.querySelector("#title");
+    const formError = modal.querySelector(".form-error");
+
+    for (let i = 0; i < categories.length; i++) {
+        const category = categories[i];
+
+        const option = document.createElement("option");
+        option.value = category.id;
+        option.innerText = category.name;
+
+        categorySelect.appendChild(option);
+    }
+
     addPhotoButton.addEventListener("click", () => {
         galleryView.style.display = "none";
         formView.style.display = "block";
@@ -190,5 +225,22 @@ function openModal() {
     backButton.addEventListener("click", () => {
         galleryView.style.display = "block";
         formView.style.display = "none";
+    });
+    imageInput.addEventListener("change", () => {
+        const file = imageInput.files[0];
+        const imageUrl = URL.createObjectURL(file);
+        imagePreview.src = imageUrl;
+    });
+    addProjectForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const title = titleInput.value;
+        const category = categorySelect.value;
+        const image = imageInput.files[0];
+        if (!image || title === "" || category === "") {
+            formError.innerText = "Veuillez remplir tous les champs";
+            return;
+        }
+        formError.innerText = "";
     });
 }
