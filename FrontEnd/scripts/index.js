@@ -1,73 +1,71 @@
-document.addEventListener('DOMContentLoaded',  () => {
-    getWorks();
-    getFilters();
-});
-
-let projects;
-
-const token = localStorage.getItem("token");
+document.addEventListener('DOMContentLoaded', async () => {
+    
+    const token = localStorage.getItem("token");
     if (token) {
-    console.log("Utilisateur connecté");
+        console.log("Utilisateur connecté");
 
-    const editMode = document.createElement("div");
-    editMode.classList.add("edit-mode");
-    editMode.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> Mode édition';
+        const editMode = document.createElement("div");
+        editMode.classList.add("edit-mode");
+        editMode.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> Mode édition';
 
-    document.body.prepend(editMode);
+        document.body.prepend(editMode);
 
-    const loginLink = document.querySelector("#login-link");
-    loginLink.textContent = "logout";
-    loginLink.removeAttribute("href");
-    loginLink.addEventListener("click", () => {
-        localStorage.removeItem("token");
-        window.location.href = "index.html";
-    });
+        const loginLink = document.querySelector("#login-link");
+        loginLink.textContent = "logout";
+        loginLink.removeAttribute("href");
+        loginLink.addEventListener("click", () => {
+            localStorage.removeItem("token");
+            window.location.href = "index.html";
+        });
 
-    const filters = document.querySelector(".categories");
-    filters.style.display = "none";
+        const filters = document.querySelector(".categories");
+        filters.style.display = "none";
 
-    const editButton = document.createElement("button");
-    editButton.classList.add("edit-button");
-    editButton.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> Modifier';
+        const editButton = document.createElement("button");
+        editButton.classList.add("edit-button");
+        editButton.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> Modifier';
 
-    const titleProjects = document.querySelector(".title-projects");
-    titleProjects.appendChild(editButton);
+        const titleProjects = document.querySelector(".title-projects");
+        titleProjects.appendChild(editButton);
 
-    editButton.addEventListener("click", () => {
-    openModal();
-    });
+        editButton.addEventListener("click", () => {
+            openModal(projects, categories);
+        });
+    }
 
-    } else {
-        console.log("Utilisateur non connecté");
-}
+    const projects = await getProjects();
+    const categories = await getCategories();
+    await getFilters(projects, categories);
 
-async function getWorks() {
-
-    const reponse = await fetch('http://localhost:5678/api/works');
-    projects =  await reponse.json();
 
     displayProjects(projects);
+
+
+
+});
+
+async function getProjects() {
+    const projectResponse = await fetch('http://localhost:5678/api/works');
+
+    return await projectResponse.json();
 }
 
 async function getCategories() {
     const categoriesResponse = await fetch('http://localhost:5678/api/categories');
-    const categories = await categoriesResponse.json();
 
-    return categories;
+    return await categoriesResponse.json();
 }
 
-async function getFilters() {
-    const categories = await getCategories();
-
+async function getFilters(projects, categories) {
+    
     const allButton = document.createElement("button");
-    allButton.innerText = "Tous";
     const sectionCategories = document.querySelector(".categories");
+    allButton.innerText = "Tous";
     sectionCategories.appendChild(allButton);
 
     for (let i = 0; i < categories.length; i++) {
 
         const category = categories[i];
-
         const sectionCategories = document.querySelector(".categories");
         const categoryElement = document.createElement("button");
         categoryElement.dataset.categoryId = category.id;
@@ -78,36 +76,33 @@ async function getFilters() {
     const buttonsFilters = document.querySelectorAll(".categories button");
     buttonsFilters.forEach((button) => {
         button.addEventListener('click', () => {
-       
-                const sectionProjects = document.querySelector(".gallery");
 
-                if (button.innerText === "Tous") {
-                    sectionProjects.innerHTML = "";
-                    displayProjects(projects);
-                    return;
-                }
-                const filteredProjects = projects.filter((project) => {
-                    return project.categoryId === Number(button.dataset.categoryId);
-                });
+            const sectionProjects = document.querySelector(".gallery");
+
+            if (button.innerText === "Tous") {
                 sectionProjects.innerHTML = "";
-                displayProjects(filteredProjects);  
+                displayProjects(projects);
+                return;
+            }
+            const filteredProjects = projects.filter((project) => {
+                return project.categoryId === Number(button.dataset.categoryId);
+            });
+            sectionProjects.innerHTML = "";
+            displayProjects(filteredProjects);
         });
     });
 }
 
-function displayProjects(projectsToDisplay) {
+function displayProjects(projects) {
+    
+    for (let i = 0; i < projects.length; i++) {
 
-    for (let i = 0; i < projectsToDisplay.length; i++) {
-
-        const project = projectsToDisplay[i];
-
+        const project = projects[i];
         const sectionProjects = document.querySelector(".gallery");
         const projectElement = document.createElement("article");
-
-
         const imageElement = document.createElement("img");
-        imageElement.src = project.imageUrl;
         const titleElement = document.createElement("p");
+        imageElement.src = project.imageUrl;
         titleElement.innerText = project.title;
         projectElement.appendChild(imageElement);
         projectElement.appendChild(titleElement);
@@ -115,11 +110,9 @@ function displayProjects(projectsToDisplay) {
     }
 }
 
-async function openModal() {
-    const categories = await getCategories();
+async function openModal(projects, categories) {
     const modal = document.createElement("div");
     modal.classList.add("modal");
-
     modal.innerHTML = `
         <div class="modal-content">
             <span class="modal-close">&times;</span>
@@ -159,26 +152,26 @@ async function openModal() {
         image.src = project.imageUrl;
         image.alt = project.title;
         const deleteButton = document.createElement("button");
-            deleteButton.addEventListener("click", async () => {
-                const response = await fetch(
-                    `http://localhost:5678/api/works/${project.id}`,
-                    {
-                        method: 'DELETE',
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
+        deleteButton.addEventListener("click", async () => {
+            const response = await fetch(
+                `http://localhost:5678/api/works/${project.id}`,
+                {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
-                );
-                if (response.ok) {
-                    projectContainer.remove();
-                    projects = projects.filter((item) => {
-                        return project.id !== item.id;
-                    });
-                    const sectionProjects = document.querySelector(".gallery");
-                    sectionProjects.innerHTML = "";
-                    displayProjects(projects);
                 }
-            });
+            );
+            if (response.ok) {
+                projectContainer.remove();
+                projects = projects.filter((item) => {
+                    return project.id !== item.id;
+                });
+                const sectionProjects = document.querySelector(".gallery");
+                sectionProjects.innerHTML = "";
+                displayProjects(projects);
+            }
+        });
 
         const deleteIcon = document.createElement("i");
         deleteIcon.classList.add("fa-solid", "fa-trash-can");
@@ -193,9 +186,9 @@ async function openModal() {
         modal.remove();
     });
     modal.addEventListener("click", (event) => {
-    if (event.target === modal) {
-        modal.remove();
-    }
+        if (event.target === modal) {
+            modal.remove();
+        }
     });
     const galleryView = modal.querySelector(".gallery-view");
     const formView = modal.querySelector(".form-view");
