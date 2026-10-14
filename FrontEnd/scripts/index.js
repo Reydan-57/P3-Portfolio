@@ -116,7 +116,7 @@ function openModal(projects, categories, token) {
     modalProjects(modal, projects, token);
     modalClose(modal);
     modalCategories(modal, categories);
-    modalForm(modal);
+    modalForm(modal, token);
     modalNavigation(modal);
 }
 
@@ -216,7 +216,7 @@ function modalCategories(modal, categories) {
 
 }
 
-function modalForm(modal) {
+function modalForm(modal, token) {
 
     const imageInput = modal.querySelector("#image");
     const imagePreview = modal.querySelector(".image-preview");
@@ -224,14 +224,14 @@ function modalForm(modal) {
     const titleInput = modal.querySelector("#title");
     const formError = modal.querySelector(".form-error");
     const categorySelect = modal.querySelector("#category");
-
+    const backButton = modal.querySelector(".back-button");
 
     imageInput.addEventListener("change", () => {
         const file = imageInput.files[0];
         const imageUrl = URL.createObjectURL(file);
         imagePreview.src = imageUrl;
     });
-    addProjectForm.addEventListener("submit", (event) => {
+    addProjectForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const title = titleInput.value;
@@ -241,7 +241,37 @@ function modalForm(modal) {
             formError.innerText = "Veuillez remplir tous les champs";
             return;
         }
+
+        const formData = new FormData();
+        formData.append("image", image);
+        formData.append("title", title);
+        formData.append("category", category);
+
+        const response = await fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            body: formData
+        });
+        if (!response.ok) {
+            formError.innerText = "Erreur lors de l'ajout du projet";
+            return;
+        }
+        formError.innerText = "Projet ajouté avec succès";
+        const updatedProjects = await getProjects();
+        const sectionProjects = document.querySelector(".gallery");
+        sectionProjects.innerHTML = "";
+        const modalGallery = modal.querySelector(".modal-gallery");
+        modalGallery.innerHTML = "";
+        displayProjects(updatedProjects);
+        modalProjects(modal, updatedProjects, token);
+        addProjectForm.reset();
+        imagePreview.src = "";
+        /* A verifier si on veut garder le formulaire ouvert ou revenir à la galerie après l'ajout d'un projet
         formError.innerText = "";
+        backButton.click();
+        */
     });
 }
 
