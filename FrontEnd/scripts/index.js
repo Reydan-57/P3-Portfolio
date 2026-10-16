@@ -138,19 +138,22 @@ function createModal() {
     modal.classList.add("modal");
     modal.innerHTML = `
         <div class="modal-content">
-            <span class="modal-close">&times;</span>
+            <span class="modal-close"><i class="fa-solid fa-xmark"></i></span>
             <div class="gallery-view">
                 <h2>Galerie photo</h2>
                 <div class="modal-gallery"></div>
                 <button class="add-photo">Ajouter une photo</button>
             </div>
             <div class="form-view">
-                <button class="back-button">←</button>
+                <button class="back-button"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2>Ajout photo</h2>
                 <form class="add-project-form">
                     <div class="image-upload">
-                        <input type="file" id="image" accept="image/*">
                         <img class="image-preview">
+                        <i class="fa-solid fa-image"></i>
+                        <input type="file" id="image" accept="image/*">
+                        <label for="image"><i class="fa-solid fa-plus"></i> Ajouter photo</label>
+                        <p>jpg, png : 4mo max</p>
                     </div>
                     <label for="title">Titre</label>
                     <input type="text" id="title">
@@ -230,6 +233,7 @@ function modalForm(modal, token) {
         const file = imageInput.files[0];
         const imageUrl = URL.createObjectURL(file);
         imagePreview.src = imageUrl;
+        imagePreview.style.display = "block";
     });
     addProjectForm.addEventListener("submit", async (event) => {
         event.preventDefault();
