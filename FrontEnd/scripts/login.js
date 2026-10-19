@@ -1,16 +1,33 @@
-﻿
+﻿document.addEventListener('DOMContentLoaded', () => {
+    connect()
+});
 
-const usersEmail = document.querySelector("#email");
-const usersPassword = document.querySelector("#password");
+function connect() {
+    const usersEmail = document.querySelector("#email");
+    const usersPassword = document.querySelector("#password");
+    const form = document.querySelector("form");
 
-const form = document.querySelector("form");
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const email = usersEmail.value;
+        const password = usersPassword.value;
 
-form.addEventListener("submit", async (event) => {
-    event.preventDefault();
+        await loginUser(form, email, password);
+    });
 
-    const email = usersEmail.value;
-    const password = usersPassword.value;
+}
 
+function messageError(form) {
+    const existingError = document.querySelector(".error-message");
+    if (!existingError) {
+        const errorMessage = document.createElement("p");
+        errorMessage.textContent = "E-mail ou mot de passe incorrect.";
+        errorMessage.classList.add("error-message");
+        form.appendChild(errorMessage);
+    };
+};
+
+async function loginUser(form, email, password) {
     const reponse = await fetch('http://localhost:5678/api/users/login', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
@@ -23,13 +40,6 @@ form.addEventListener("submit", async (event) => {
         localStorage.setItem("token", data.token);
         window.location.href = "index.html";
     } else {
-        messageError();
-    }
-});
-
-function messageError() {
-    const errorMessage = document.createElement("p");
-    errorMessage.textContent = "E-mail ou mot de passe incorrect.";
-    errorMessage.classList.add("error-message");
-    form.appendChild(errorMessage);
-}
+        messageError(form);
+    };
+};
