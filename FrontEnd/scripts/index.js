@@ -1,5 +1,25 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
+    const projects = await getProjects();
+    const categories = await getCategories();
+    createFilters(projects, categories);
+    displayProjects(projects);
+    createEditMode(categories);
+});
+
+async function getProjects() {
+    const projectResponse = await fetch('http://localhost:5678/api/works');
+
+    return await projectResponse.json();
+}
+
+async function getCategories() {
+    const categoriesResponse = await fetch('http://localhost:5678/api/categories');
+
+    return await categoriesResponse.json();
+}
+
+function createEditMode(categories) {
     const token = localStorage.getItem("token");
     if (token) {
         const editMode = document.createElement("div");
@@ -30,35 +50,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const updatedProjects = await getProjects();
             openModal(updatedProjects, categories, token);
         });
-    }
-
-
-    const projects = await getProjects();
-    const categories = await getCategories();
-
-    getFilters(projects, categories);
-
-    displayProjects(projects);
-
-
-
-});
-
-async function getProjects() {
-    const projectResponse = await fetch('http://localhost:5678/api/works');
-
-    return await projectResponse.json();
+    };
 }
 
-async function getCategories() {
-    const categoriesResponse = await fetch('http://localhost:5678/api/categories');
-
-    return await categoriesResponse.json();
-}
-
-function getFilters(projects, categories) {
-
-
+function createFilters(projects, categories) {
     const allButton = document.createElement("button");
     const sectionCategories = document.querySelector(".categories");
     allButton.innerText = "Tous";
@@ -67,13 +62,11 @@ function getFilters(projects, categories) {
     for (let i = 0; i < categories.length; i++) {
 
         const category = categories[i];
-        const sectionCategories = document.querySelector(".categories");
         const categoryElement = document.createElement("button");
         categoryElement.dataset.categoryId = category.id;
         categoryElement.innerText = category.name;
         sectionCategories.appendChild(categoryElement);
     }
-
     const buttonsFilters = document.querySelectorAll(".categories button");
     buttonsFilters.forEach((button) => {
         button.addEventListener('click', () => {
@@ -272,6 +265,7 @@ function modalForm(modal, token) {
         modalProjects(modal, updatedProjects, token);
         addProjectForm.reset();
         imagePreview.src = "";
+        imagePreview.style.display = "none";
         /* A verifier si on veut garder le formulaire ouvert ou revenir à la galerie après l'ajout d'un projet
         formError.innerText = "";
         backButton.click();
