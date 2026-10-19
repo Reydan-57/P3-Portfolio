@@ -209,7 +209,6 @@ function modalCategories(modal, categories) {
 
         categorySelect.appendChild(option);
     }
-
 }
 
 function modalForm(modal, token) {
@@ -221,12 +220,18 @@ function modalForm(modal, token) {
     const formError = modal.querySelector(".form-error");
     const categorySelect = modal.querySelector("#category");
     const backButton = modal.querySelector(".back-button");
+    const faImage = modal.querySelector(".fa-image")
+    const addPhotoLabel = modal.querySelector('label[for="image"]')
+    const imageFormat = modal.querySelector(".image-upload p")
 
     imageInput.addEventListener("change", () => {
         const file = imageInput.files[0];
         const imageUrl = URL.createObjectURL(file);
         imagePreview.src = imageUrl;
         imagePreview.style.display = "block";
+        faImage.style.display = "none";
+        addPhotoLabel.style.display = "none";
+        imageFormat.style.display = "none";
     });
     addProjectForm.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -266,10 +271,9 @@ function modalForm(modal, token) {
         addProjectForm.reset();
         imagePreview.src = "";
         imagePreview.style.display = "none";
-        /* A verifier si on veut garder le formulaire ouvert ou revenir à la galerie après l'ajout d'un projet
-        formError.innerText = "";
-        backButton.click();
-        */
+        faImage.style.display = "";
+        addPhotoLabel.style.display = "";
+        imageFormat.style.display = "";
     });
 }
 

@@ -534,7 +534,10 @@ i.fa-solid.fa-trash-can {
 }
 
 .image-preview {
-    display: none;
+	display: none;
+    max-height: 169px;
+    max-width: 100%;
+    object-fit: contain;
 }
 
 .back-button {
@@ -563,12 +566,13 @@ i.fa-solid.fa-trash-can {
 	margin: 2.6em 0 2.2em;
 }
 
-.add-project-form label {
-	font-family: 'Syne';
+.add-project-form label[for="title"],
+.add-project-form label[for="category"] {
+	font-family: 'Work Sans';
 	font-size: 14px;
-	font-weight: 700;
-	color: #1D6154;
-	margin-bottom: 0.8em;
+	font-weight: 500;
+	color: #3D3D3D;
+	margin-bottom: 0.7em;
 }
 
 .add-project-form {
@@ -584,11 +588,11 @@ button[type="submit"] {
 	font-size: 14px;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-	margin-bottom: 1.3em;
+	margin-bottom: 1.5em;
 }
 
 select#category {
-	margin-bottom: 2.8em;
+	margin-bottom: 3.3em;
 }
 
 .form-error {
