@@ -24,7 +24,7 @@ function createEditMode(categories) {
     if (token) {
         const editMode = document.createElement("div");
         editMode.classList.add("edit-mode");
-        editMode.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> Mode édition';
+        editMode.innerHTML = '<i class="fa-regular fa-pen-to-square"></i>Mode édition';
 
         document.body.prepend(editMode);
 
@@ -41,7 +41,7 @@ function createEditMode(categories) {
 
         const editButton = document.createElement("button");
         editButton.classList.add("edit-button");
-        editButton.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> Modifier';
+        editButton.innerHTML = '<i class="fa-regular fa-pen-to-square"></i>Modifier';
 
         const titleProjects = document.querySelector(".title-projects");
         titleProjects.appendChild(editButton);

@@ -283,6 +283,11 @@ li:hover {
 	grid-row-gap: 20px;
 }
 
+.gallery p {
+	color: #3D3D3D;
+	font-size: 13px;
+}
+
 .gallery img {
 	width: 100%;
 
@@ -309,8 +314,11 @@ li:hover {
 	margin: 0 3.4em;
 }
 
+input#email, input#name, input#password {
+	height: 51px;
+}
+
 #contact input {
-	height: 50px;
 	font-size: 14px;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
@@ -333,6 +341,7 @@ button[type="submit"] {
 	background-color: #1D6154;
 	margin: 2.2em auto 0;
 	width: 180px;
+	height: 36px;
 	text-align: center;
 	border-radius: 60px;
 }
@@ -375,7 +384,6 @@ footer nav li {
 }
 
 #login input {
-	height: 50px;
 	font-size: 14px;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
@@ -408,6 +416,10 @@ footer nav li {
 	text-align: center;
 	padding: 20px;
 	font-size: 16px;
+}
+
+i.fa-regular.fa-pen-to-square {
+	margin-right: 0.7em;
 }
 
 /*Modal*/
@@ -597,6 +609,8 @@ select#category {
 
 .form-error {
 	border-bottom: solid 1px #B3B3B3;
+	text-align: center;
+	font-weight: bold;
 }
 
 button[type="submit"]:hover {
@@ -607,4 +621,10 @@ button[type="submit"] {
 	margin: 2.3em auto 3.7em;
 	width: 237px;
 	height: 36px;
+}
+
+input#title, select#category {
+	font-family: Work Sans;
+	font-weight: 400;
+	color: #444444;
 }
