@@ -194,6 +194,10 @@ function displayModalProjects(modal, projects, token) {
 
 function createModalCategories(modal, categories) {
     const categorySelect = modal.querySelector("#category");
+    const defaultCategorySelect = document.createElement("option");
+    defaultCategorySelect.innerText = "Sélectionnez une catégorie";
+    defaultCategorySelect.value = ""
+    categorySelect.appendChild(defaultCategorySelect);
 
     for (let i = 0; i < categories.length; i++) {
         const category = categories[i];
@@ -220,7 +224,11 @@ function createModalForm(modal, token) {
 
     imageInput.addEventListener("change", () => {
         const file = imageInput.files[0];
+        if (!file) {
+            return;
+        }
         const imageUrl = URL.createObjectURL(file);
+
         imagePreview.src = imageUrl;
         imagePreview.style.display = "block";
         faImage.style.display = "none";
