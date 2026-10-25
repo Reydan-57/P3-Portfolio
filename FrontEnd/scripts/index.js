@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const projects = await getProjects();
     const categories = await getCategories();
+
     createFilters(projects, categories);
     displayProjects(projects);
     createEditMode(categories);
@@ -9,25 +10,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function getProjects() {
     const projectResponse = await fetch('http://localhost:5678/api/works');
-
     return await projectResponse.json();
 }
 
 async function getCategories() {
     const categoriesResponse = await fetch('http://localhost:5678/api/categories');
-
     return await categoriesResponse.json();
 }
 
 function createEditMode(categories) {
     const token = localStorage.getItem("token");
+
     if (token) {
         const editMode = document.createElement("div");
         editMode.classList.add("edit-mode");
         editMode.innerHTML = '<i class="fa-regular fa-pen-to-square"></i>Mode édition';
-
         document.body.prepend(editMode);
-
         const loginLink = document.querySelector("#login-link");
         loginLink.textContent = "logout";
         loginLink.removeAttribute("href");
@@ -38,14 +36,11 @@ function createEditMode(categories) {
 
         const filters = document.querySelector(".categories");
         filters.style.display = "none";
-
         const editButton = document.createElement("button");
         editButton.classList.add("edit-button");
         editButton.innerHTML = '<i class="fa-regular fa-pen-to-square"></i>Modifier';
-
         const titleProjects = document.querySelector(".title-projects");
         titleProjects.appendChild(editButton);
-
         editButton.addEventListener("click", async () => {
             const updatedProjects = await getProjects();
             openModal(updatedProjects, categories, token);
@@ -106,14 +101,14 @@ function displayProjects(projects) {
 
 function openModal(projects, categories, token) {
     const modal = createModal();
-    modalProjects(modal, projects, token);
-    modalClose(modal);
-    modalCategories(modal, categories);
-    modalForm(modal, token);
-    modalNavigation(modal);
+    displayModalProjects(modal, projects, token);
+    closeModal(modal);
+    createModalCategories(modal, categories);
+    createModalForm(modal, token);
+    createModalNavigation(modal);
 }
 
-function modalClose(modal) {
+function closeModal(modal) {
     const closeModal = modal.querySelector(".modal-close");
 
     closeModal.addEventListener("click", () => {
@@ -165,7 +160,7 @@ function createModal() {
     return modal;
 }
 
-function modalProjects(modal, projects, token) {
+function displayModalProjects(modal, projects, token) {
     const modalGallery = modal.querySelector(".modal-gallery");
 
     projects.forEach(project => {
@@ -197,7 +192,7 @@ function modalProjects(modal, projects, token) {
     });
 }
 
-function modalCategories(modal, categories) {
+function createModalCategories(modal, categories) {
     const categorySelect = modal.querySelector("#category");
 
     for (let i = 0; i < categories.length; i++) {
@@ -211,7 +206,7 @@ function modalCategories(modal, categories) {
     }
 }
 
-function modalForm(modal, token) {
+function createModalForm(modal, token) {
 
     const imageInput = modal.querySelector("#image");
     const imagePreview = modal.querySelector(".image-preview");
@@ -219,7 +214,6 @@ function modalForm(modal, token) {
     const titleInput = modal.querySelector("#title");
     const formError = modal.querySelector(".form-error");
     const categorySelect = modal.querySelector("#category");
-    const backButton = modal.querySelector(".back-button");
     const faImage = modal.querySelector(".fa-image")
     const addPhotoLabel = modal.querySelector('label[for="image"]')
     const imageFormat = modal.querySelector(".image-upload p")
@@ -249,13 +243,8 @@ function modalForm(modal, token) {
         formData.append("title", title);
         formData.append("category", category);
 
-        const response = await fetch("http://localhost:5678/api/works", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            body: formData
-        });
+        const response = await addProject(formData, token)
+
         if (!response.ok) {
             formError.innerText = "Erreur lors de l'ajout du projet";
             return;
@@ -267,7 +256,7 @@ function modalForm(modal, token) {
         const modalGallery = modal.querySelector(".modal-gallery");
         modalGallery.innerHTML = "";
         displayProjects(updatedProjects);
-        modalProjects(modal, updatedProjects, token);
+        displayModalProjects(modal, updatedProjects, token);
         addProjectForm.reset();
         imagePreview.src = "";
         imagePreview.style.display = "none";
@@ -277,7 +266,7 @@ function modalForm(modal, token) {
     });
 }
 
-function modalNavigation(modal) {
+function createModalNavigation(modal) {
     const galleryView = modal.querySelector(".gallery-view");
     const formView = modal.querySelector(".form-view");
     const backButton = modal.querySelector(".back-button");
@@ -304,4 +293,15 @@ async function deleteProject(projectId, token) {
         }
     );
     return response;
+}
+
+async function addProject(formData, token) {
+    const response = await fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        body: formData
+    });
+    return response
 }
