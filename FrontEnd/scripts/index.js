@@ -52,7 +52,9 @@ function createFilters(projects, categories) {
     const allButton = document.createElement("button");
     const sectionCategories = document.querySelector(".categories");
     allButton.innerText = "Tous";
+    allButton.classList.add("active");
     sectionCategories.appendChild(allButton);
+
 
     for (let i = 0; i < categories.length; i++) {
 
@@ -65,9 +67,11 @@ function createFilters(projects, categories) {
     const buttonsFilters = document.querySelectorAll(".categories button");
     buttonsFilters.forEach((button) => {
         button.addEventListener('click', () => {
-
             const sectionProjects = document.querySelector(".gallery");
-
+            buttonsFilters.forEach(button => {
+                button.classList.remove("active");
+            });
+            button.classList.add("active");
             if (button.innerText === "Tous") {
                 sectionProjects.innerHTML = "";
                 displayProjects(projects);
@@ -78,6 +82,7 @@ function createFilters(projects, categories) {
             });
             sectionProjects.innerHTML = "";
             displayProjects(filteredProjects);
+
         });
     });
 }

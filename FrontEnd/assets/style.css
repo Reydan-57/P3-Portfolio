@@ -270,7 +270,7 @@ li:hover {
 	margin: 5px;
 }
 
-.categories button:hover {
+.categories button:hover, .categories button.active {
 	background-color: #1D6154;
 	color: white;
 }
