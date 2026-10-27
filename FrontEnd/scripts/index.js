@@ -28,10 +28,9 @@ function createEditMode(categories) {
         document.body.prepend(editMode);
         const loginLink = document.querySelector("#login-link");
         loginLink.textContent = "logout";
-        loginLink.removeAttribute("href");
+        loginLink.setAttribute("href", "./index.html");
         loginLink.addEventListener("click", () => {
             localStorage.removeItem("token");
-            window.location.href = "index.html";
         });
 
         const filters = document.querySelector(".categories");
